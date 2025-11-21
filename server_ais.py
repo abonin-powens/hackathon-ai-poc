@@ -169,7 +169,7 @@ IMPORTANT: DO NOT BRING UP POSITIVE ASPECTS.
 """
 
 # Load context files at startup
-contexts = ["swagger_clean.json", "pages.py", "stet_pages.py", "bundle.anonymized.har"]
+contexts = ["data/swagger_clean.json", "data/pages.py", "data/stet_pages.py", "data/bundle.anonymized.har"]
 contents = []
 for context in contexts:
     try:
