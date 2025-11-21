@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from api_gap_analyzer.code_analyzer import CodeAnalyzer
+from .code_analyzer import CodeAnalyzer
 
 logger = logging.getLogger(__name__)
 
@@ -21,9 +21,12 @@ class ModuleExplorer:
         if woob_root is None:
             # Default to ../woob relative to the hackathon-ai-poc directory
             current_file = Path(__file__).resolve()
-            hackathon_root = current_file.parent.parent.parent
-            woob_root = str(hackathon_root.parent / "woob")
-        self.woob_root = Path(woob_root)
+            #hackathon_root = current_file.parent.parent.parent
+            #woob_root = str(hackathon_root.parent / "woob")
+        import os
+        home = os.path.expanduser("~")
+        woob_root = Path(home) / "dev" / "woob"
+        self.woob_root = woob_root
         self.code_analyzer = CodeAnalyzer(woob_root)
         self.analysis_cache = {}
 

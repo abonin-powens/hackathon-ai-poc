@@ -21,8 +21,11 @@ class CodeAnalyzer:
             # Default to ../woob relative to the hackathon-ai-poc directory
             current_file = Path(__file__).resolve()
             hackathon_root = current_file.parent.parent.parent
-            woob_root = hackathon_root.parent / "woob"
+            import os
+            home = os.path.expanduser("~")
+            woob_root  / "dev" / "woob"
         self.woob_root = Path(woob_root)
+        print(self.woob_root)
         self.imports_cache = {}
         self.classes_cache = {}
 

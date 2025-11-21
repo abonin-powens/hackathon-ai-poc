@@ -33,12 +33,12 @@ import sys
 import time
 from pathlib import Path
 
-from api_gap_analyzer.bedrock_client import BedrockAnalyzer
-from api_gap_analyzer.context_formatter import ContextFormatter
-from api_gap_analyzer.explorer import ModuleExplorer
-from api_gap_analyzer.report_generator import ReportGenerator
-from api_gap_analyzer.swagger_parser import SwaggerParser
-from api_gap_analyzer.system_prompt import get_system_prompt
+from .api_gap_analyzer.bedrock_client import BedrockAnalyzer
+from .api_gap_analyzer.context_formatter import ContextFormatter
+from .api_gap_analyzer.explorer import ModuleExplorer
+from .api_gap_analyzer.report_generator import ReportGenerator
+from .api_gap_analyzer.swagger_parser import SwaggerParser
+from .api_gap_analyzer.system_prompt import get_system_prompt
 
 
 def setup_logging(verbose: bool = False) -> None:
