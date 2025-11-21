@@ -3,7 +3,6 @@ import importlib
 import inspect
 import sys
 import re
-import subprocess
 # ---------------------------------------------------------
 # Parse a Python module into AST
 # ---------------------------------------------------------
@@ -27,7 +26,6 @@ def collect_top_level(tree):
         elif isinstance(node, (ast.Assign, ast.AnnAssign)):
             assignments.append(node)
         else:
-            # Include other nodes if needed
             assignments.append(node)
     return imports, assignments, functions, classes
 # ---------------------------------------------------------
@@ -57,19 +55,19 @@ def get_external_imports(full_class_path):
         module = importlib.import_module(module_name)
         file_path = inspect.getsourcefile(module)
     except Exception:
-        return []
+        return [], None
     if not file_path:
-        return []
+        return [], None
     try:
         with open(file_path, "r") as f:
             tree = ast.parse(f.read())
     except Exception:
-        return []
+        return [], file_path
     imports = []
     for node in tree.body:
         if isinstance(node, (ast.Import, ast.ImportFrom)):
             imports.append(ast.unparse(node))
-    return imports
+    return imports, file_path
 # ---------------------------------------------------------
 # Get external class source and rename to alias
 # ---------------------------------------------------------
@@ -114,6 +112,7 @@ def flatten_module(module_path):
     # Write original imports
     written_imports = set()
     if imports:
+        lines.append("# --- Original imports ---\n")
         for node in imports:
             code = ast.unparse(node)
             lines.append(code + "\n")
@@ -121,13 +120,15 @@ def flatten_module(module_path):
         lines.append("\n")
     # Write top-level variables/constants
     if assignments:
+        lines.append("# --- Top-level variables/constants ---\n")
         for node in assignments:
             lines.append(ast.unparse(node) + "\n\n")
     # Write top-level functions
     if functions:
+        lines.append("# --- Top-level functions ---\n")
         for node in functions:
             lines.append(ast.unparse(node) + "\n\n")
-    # Write external base classes
+    # Write external base classes with comments showing source file
     written_aliases = set()
     for cls in classes:
         for base in cls.bases:
@@ -135,14 +136,18 @@ def flatten_module(module_path):
                 alias_name = base.id
                 if alias_name in alias_mapping and alias_name not in written_aliases:
                     full_class_path = alias_mapping[alias_name]
-                    # Write necessary imports for the external class
-                    ext_imports = get_external_imports(full_class_path)
+                    real_class_name = full_class_path.rsplit(".", 1)[-1]
+                    # Get imports and file path
+                    ext_imports, file_path = get_external_imports(full_class_path)
                     for imp in ext_imports:
                         if imp not in written_imports:
                             lines.append(imp + "\n")
                             written_imports.add(imp)
                     if ext_imports:
                         lines.append("\n")
+                    # Add comment with source file if available
+                    if file_path:
+                        lines.append(f"# --- Flattened class '{real_class_name}' from file: {file_path} ---\n")
                     # Write the class itself under alias name
                     try:
                         src = get_external_class_source(full_class_path, alias_name)
@@ -151,26 +156,17 @@ def flatten_module(module_path):
                     except Exception as e:
                         print(f"Warning: could not fetch source for {full_class_path}: {e}")
     # Write original classes
+    lines.append(f"# --- Original classes of the module being analyzed {module_path}---\n")
     for cls in classes:
         lines.append(ast.unparse(cls) + "\n\n")
-
     return lines
-    # Save to output file
 
-    #with open(output_file, "w") as f:
-    #    f.writelines(lines)
-    #print(f":coche_trait_plein: Flattened module written to: {output_file}")
-    ## ---------------------------------------------------------
-    ## Run Ruff formatter and check
-    ## ---------------------------------------------------------
-    #subprocess.run(["ruff", "format", output_file])
-    #subprocess.run(["ruff", "check", "--fix", output_file, "--ignore", "F811,F821,E402"])
 # ---------------------------------------------------------
 # CLI
 # ---------------------------------------------------------
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python flatten_module_final.py <module_path.py>")
+        print("Usage: python flatten_module_final_with_comments.py <module_path.py>")
         sys.exit(1)
     module_path = sys.argv[1]
     output_file = re.sub(r"\.py$", "_flat.py", sys.argv[1])

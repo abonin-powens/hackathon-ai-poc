@@ -95,7 +95,8 @@ For each issue found, provide:
 [Explain what will happen because of this issue]
 
 **Suggested Fix** (if possible):
-[Provide corrected code snippet or clear steps to fix]
+Suggest a potential fix.
+DO NOT PROVIDE A CODE SNIPPET.
 
 ## Important Guidelines
 
@@ -146,9 +147,7 @@ balance = response['balanceAmount']  # Wrong field name
 Account balance will not be retrieved, and users will see missing or zero balance information.
 
 **Suggested Fix**:
-```python
-balance = response['balance']['amount']  # Correct nested access
-```
+You could rename the field access to match the spec.
 
 When you receive API specifications, woob code, and HAR file systematically analyze them and generate a complete issue report following this format.
 Please focus on issues and potential discrepancies.

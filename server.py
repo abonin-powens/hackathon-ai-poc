@@ -1,8 +1,10 @@
 import os
 import json
+from pathlib import Path
 import boto3
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
+from flat_module import flatten_module
 from model import bedrock, model_id, configuration
 from prompt import SYSTEM_PROMPT, make_final_prompt
 from woob_gap_analyzer.api_gap_analyzer.context_formatter import ContextFormatter
@@ -10,9 +12,10 @@ from woob_gap_analyzer.api_gap_analyzer.explorer import ModuleExplorer
 
 
 def get_woob_context(module_name: str) -> str:
-    woob_analysis = ModuleExplorer().explore_module(module_name)
-    woob_context = ContextFormatter.format_woob_analysis(woob_analysis)
-    return woob_context
+    import os
+    home = os.path.expanduser("~")
+    module_path = Path(home) / "dev" / "woob" / "modules" / module_name / "pages.py"
+    return "\n".join(flatten_module(module_path))
 
 
 def prompt_final_model(module_name: str, prompt: str) -> str:
@@ -65,9 +68,6 @@ class Handler(BaseHTTPRequestHandler):
             #module_name = self.rfile.read(content_length).decode("utf-8")
 
             woob_context = get_woob_context(module_name)
-
-            #print("woob context: ")
-            #print(woob_context)
 
             built_in_context = get_built_in_context()
             context = [*built_in_context, ("Woob module content", woob_context)]
