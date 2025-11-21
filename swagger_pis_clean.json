@@ -1,0 +1,631 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DSP2 - Payments",
+    "description": "PSD2 API specification filtered for payment endpoints",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "/dsp2"
+    }
+  ],
+  "paths": {
+    "/payment-requests": {
+      "post": {
+        "summary": "Initiates of a Payment Request on a PSU account on behalf of a merchant",
+        "description": "Initiates of a Payment Request on a PSU account on behalf of a merchant",
+        "operationId": "postPaymentRequests",
+        "tags": ["PaymentRequests"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequestResource"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HalPaymentRequestCreation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment-requests/{paymentRequestResourceId}": {
+      "get": {
+        "summary": "Retrieves a Payment Request previously posted on a PSU account on behalf of a merchant",
+        "description": "Retrieves a Payment Request previously posted on a PSU account on behalf of a merchant",
+        "operationId": "getPaymentRequests",
+        "tags": ["PaymentRequests"],
+        "parameters": [
+          {
+            "name": "paymentRequestResourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the payment information within the Payment activation Request"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieval of the previously posted Payment Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HalPaymentRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment-requests/{paymentRequestResourceId}/confirmation": {
+      "post": {
+        "summary": "Retrieves a Payment Request previously posted on a PSU account on behalf of a merchant",
+        "description": "Retrieves a Payment Request previously posted on a PSU account on behalf of a merchant",
+        "operationId": "postPaymentRequestsConfirmation",
+        "tags": ["PaymentRequests"],
+        "parameters": [
+          {
+            "name": "paymentRequestResourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the payment information within the Payment activation Request"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieval of the previously posted Payment Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HalPaymentRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/funds-confirmations": {
+      "post": {
+        "summary": "Vérifie la disponibilité des fonds sur le compte PSU",
+        "description": "Le PISP demande à l'ASPSP si un montant peut être couvert par la liquidité disponible sur un compte PSU ou une carte de paiement.",
+        "operationId": "postFundsConfirmations",
+        "tags": ["FundsConfirmations"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentCoverageRequestResource"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Demande de couverture de paiement acceptée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCoverageRequestResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HalPaymentRequestCreation": {
+        "type": "object",
+        "properties": {
+          "appliedAuthenticationApproach": {
+            "type": "string",
+            "enum": ["REDIRECT", "DECOUPLED", "EMBEDDED"]
+          },
+          "_links": {
+            "$ref": "#/components/schemas/PaymentRequestResourceCreationLinks"
+          }
+        }
+      },
+      "PaymentRequestResourceCreationLinks": {
+        "type": "object",
+        "properties": {
+          "consentApproval": {
+            "$ref": "#/components/schemas/GenericLink"
+          }
+        }
+      },
+      "HalPaymentRequest": {
+        "type": "object",
+        "required": ["_links", "paymentRequest"],
+        "properties": {
+          "_links": {
+            "$ref": "#/components/schemas/PaymentTransferRequestLinks"
+          },
+          "paymentRequest": {
+            "$ref": "#/components/schemas/PaymentRequestResource"
+          }
+        }
+      },
+      "PaymentTransferRequestLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "confirmation": {
+            "$ref": "#/components/schemas/GenericLink"
+          }
+        }
+      },
+      "PaymentRequestResource": {
+        "type": "object",
+        "required": [
+          "creationDateTime",
+          "creditTransferTransaction",
+          "initiatingParty",
+          "numberOfTransactions",
+          "paymentInformationId",
+          "paymentTypeInformation",
+          "supplementaryData"
+        ],
+        "properties": {
+          "resourceId": {
+            "type": "string"
+          },
+          "paymentInformationId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "creationDateTime": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "numberOfTransactions": {
+            "format": "int32",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 80
+          },
+          "initiatingParty": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "paymentInformationStatus": {
+            "type": "string",
+            "enum": [
+              "ACCP",
+              "ACSC",
+              "ACSP",
+              "ACTC",
+              "ACWC",
+              "ACWP",
+              "PART",
+              "RCVD",
+              "PDNG",
+              "RJCT"
+            ]
+          },
+          "statusReasonInformation": {
+            "type": "string",
+            "enum": [
+              "AC01",
+              "AC04",
+              "AC06",
+              "AG01",
+              "AM18",
+              "CH03",
+              "CUST",
+              "DS02",
+              "FF01",
+              "FRAD",
+              "MS03",
+              "NOAS",
+              "RR01",
+              "RR03",
+              "RR04",
+              "RR12"
+            ]
+          },
+          "debtorAccount": {
+            "$ref": "#/components/schemas/AccountIdentification"
+          },
+          "debtor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "debtorAgent": {
+            "$ref": "#/components/schemas/FinancialInstitutionIdentification"
+          },
+          "ultimateCreditor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "purpose": {
+            "type": "string",
+            "enum": ["ACCT", "COMC", "CASH", "CPKC", "TRPT"]
+          },
+          "chargeBearer": {
+            "type": "string",
+            "enum": ["SLEV", "DEBT", "CRED", "SHAR"]
+          },
+          "paymentTypeInformation": {
+            "$ref": "#/components/schemas/PaymentTypeInformation"
+          },
+          "requestedExecutionDate": {
+            "type": "string"
+          },
+          "creditTransferTransaction": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditTransferTransaction"
+            }
+          },
+          "beneficiary": {
+            "$ref": "#/components/schemas/Beneficiary"
+          },
+          "supplementaryData": {
+            "$ref": "#/components/schemas/SupplementaryData"
+          },
+          "equivalentAmount": {
+            "type": "string"
+          },
+          "booking": {
+            "type": "boolean"
+          },
+          "fundsAvailability": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreditTransferTransaction": {
+        "type": "object",
+        "required": [
+          "instructedAmount",
+          "paymentId",
+          "remittanceInformation",
+          "requestedExecutionDate"
+        ],
+        "properties": {
+          "paymentId": {
+            "$ref": "#/components/schemas/PaymentIdentification"
+          },
+          "instructedAmount": {
+            "$ref": "#/components/schemas/AmountType"
+          },
+          "requestedExecutionDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string",
+            "enum": ["WEEK", "TOWK", "MNTH", "TOMN", "QUTR", "SEMI", "YEAR"]
+          },
+          "executionRule": {
+            "type": "string",
+            "enum": ["FWNG", "PREC"]
+          },
+          "beneficiary": {
+            "$ref": "#/components/schemas/Beneficiary"
+          },
+          "ultimateCreditor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "remittanceInformation": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "transactionStatus": {
+            "type": "string",
+            "enum": ["RJCT", "PDNG", "ACSP", "ACSC"]
+          },
+          "statusReasonInformation": {
+            "type": "string",
+            "enum": [
+              "AC01",
+              "AC04",
+              "AC06",
+              "AG01",
+              "AM18",
+              "CH03",
+              "CUST",
+              "DS02",
+              "FF01",
+              "FRAD",
+              "MS03",
+              "NOAS",
+              "RR01",
+              "RR03",
+              "RR04",
+              "RR12"
+            ]
+          },
+          "regulatoryReportingCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PaymentIdentification": {
+        "type": "object",
+        "required": ["endToEndId", "instructionId"],
+        "properties": {
+          "resourceId": {
+            "type": "string"
+          },
+          "instructionId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "endToEndId": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "PaymentTypeInformation": {
+        "type": "object",
+        "properties": {
+          "serviceLevel": {
+            "type": "string",
+            "enum": ["SEPA"]
+          },
+          "localInstrument": {
+            "type": "string"
+          },
+          "categoryPurpose": {
+            "type": "string",
+            "enum": ["DVPM", "CASH", "CORT", "INTC", "TREA"]
+          },
+          "instructionPriority": {
+            "type": "string",
+            "enum": ["HIGH", "NORM"]
+          }
+        }
+      },
+      "SupplementaryData": {
+        "type": "object",
+        "required": ["successfulReportUrl"],
+        "properties": {
+          "acceptedAuthenticationApproach": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["REDIRECT", "DECOUPLED", "EMBEDDED"]
+            }
+          },
+          "successfulReportUrl": {
+            "minLength": 0,
+            "maxLength": 500,
+            "type": "string"
+          },
+          "unsuccessfulReportUrl": {
+            "type": "string"
+          },
+          "appliedAuthenticationApproach": {
+            "type": "string",
+            "enum": ["REDIRECT", "DECOUPLED", "EMBEDDED"]
+          },
+          "scaHint": {
+            "type": "string",
+            "enum": ["noScaExemption", "scaExemption"]
+          }
+        }
+      },
+      "PaymentCoverageRequestResource": {
+        "description": "Demande de couverture de paiement.",
+        "type": "object",
+        "required": [
+          "instructedAmount",
+          "payee",
+          "paymentCoverageRequestId"
+        ],
+        "properties": {
+          "paymentCoverageRequestId": {
+            "type": "string"
+          },
+          "payee": {
+            "type": "string"
+          },
+          "accountId": {
+            "$ref": "#/components/schemas/AccountIdentification"
+          },
+          "instructedAmount": {
+            "$ref": "#/components/schemas/AmountType"
+          }
+        }
+      },
+      "Beneficiary": {
+        "type": "object",
+        "required": ["creditor"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "creditor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "creditorAccount": {
+            "$ref": "#/components/schemas/AccountIdentification"
+          },
+          "creditorAgent": {
+            "$ref": "#/components/schemas/FinancialInstitutionIdentification"
+          },
+          "trusted": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "isTrusted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PartyIdentification": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "organisationId": {
+            "$ref": "#/components/schemas/GenericIdentification"
+          },
+          "privateId": {
+            "$ref": "#/components/schemas/GenericIdentification"
+          }
+        }
+      },
+      "PostalAddress": {
+        "type": "object",
+        "required": ["addressLine", "country"],
+        "properties": {
+          "country": {
+            "type": "string"
+          },
+          "addressLine": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AccountIdentification": {
+        "type": "object",
+        "properties": {
+          "iban": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "other": {
+            "$ref": "#/components/schemas/GenericIdentification"
+          },
+          "area": {
+            "$ref": "#/components/schemas/Area"
+          }
+        }
+      },
+      "FinancialInstitutionIdentification": {
+        "type": "object",
+        "required": ["bicFi"],
+        "properties": {
+          "bicFi": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "clearingSystemMemberId": {
+            "$ref": "#/components/schemas/ClearingSystemMemberIdentification"
+          }
+        }
+      },
+      "ClearingSystemMemberIdentification": {
+        "type": "object",
+        "properties": {
+          "clearingSystemId": {
+            "type": "string"
+          },
+          "memberId": {
+            "type": "string"
+          }
+        }
+      },
+      "AmountType": {
+        "type": "object",
+        "required": ["amount", "currency"],
+        "properties": {
+          "amount": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "GenericIdentification": {
+        "type": "object",
+        "properties": {
+          "identification": {
+            "type": "string"
+          },
+          "schemeName": {
+            "type": "string"
+          },
+          "issuer": {
+            "type": "string"
+          },
+          "cardNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "Area": {
+        "type": "object",
+        "properties": {
+          "areaId": {
+            "type": "string"
+          },
+          "areaLabel": {
+            "type": "string"
+          }
+        }
+      },
+      "GenericLink": {
+        "type": "object",
+        "properties": {
+          "href": {
+            "type": "string"
+          },
+          "templated": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "PaymentRequests",
+      "description": "Endpoint that allows a TPP to initiate a payment"
+    },
+    {
+      "name": "FundsConfirmations",
+      "description": "The PISP can ask an ASPSP to check if a given amount can be covered by the liquidity that is available on a PSU cash account or payment card."
+    }
+  ]
+}
