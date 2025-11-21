@@ -43,7 +43,7 @@ class BedrockHandler(BaseHTTPRequestHandler):
                     response = f.read()
 
                 # Send response
-                time.sleep(25)
+                time.sleep(13)
                 self.send_response(200)
                 self.send_header('Content-type', 'text/plain; charset=utf-8')
                 self.send_header('Access-Control-Allow-Origin', '*')
