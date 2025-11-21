@@ -1,9 +1,9 @@
 """Orchestrator for exploring Woob modules and understanding implementations."""
 
 import logging
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from api_gap_analyzer.agent_config import WoobCodebaseExplorer
 from api_gap_analyzer.code_analyzer import CodeAnalyzer
 
 logger = logging.getLogger(__name__)
@@ -16,11 +16,15 @@ class ModuleExplorer:
         """Initialize the explorer.
 
         Args:
-            woob_root: Root path of Woob codebase
+            woob_root: Root path of Woob codebase (default: ../woob relative to this file)
         """
-        self.woob_root = woob_root or "."
+        if woob_root is None:
+            # Default to ../woob relative to the hackathon-ai-poc directory
+            current_file = Path(__file__).resolve()
+            hackathon_root = current_file.parent.parent.parent
+            woob_root = str(hackathon_root.parent / "woob")
+        self.woob_root = Path(woob_root)
         self.code_analyzer = CodeAnalyzer(woob_root)
-        self.codebase_explorer = WoobCodebaseExplorer(woob_root)
         self.analysis_cache = {}
 
     def explore_module(self, module_name: str) -> Dict[str, Any]:
@@ -197,12 +201,9 @@ class ModuleExplorer:
         ]
 
         for path in possible_paths:
-            try:
-                # Check if file exists
-                self.codebase_explorer._read_file_internal(path)
+            full_path = self.woob_root / path
+            if full_path.exists() and full_path.is_file():
                 return path
-            except (FileNotFoundError, ValueError):
-                continue
 
         return None
 

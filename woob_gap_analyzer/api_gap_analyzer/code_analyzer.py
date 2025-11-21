@@ -15,9 +15,14 @@ class CodeAnalyzer:
         """Initialize the analyzer.
 
         Args:
-            woob_root: Root path of Woob codebase
+            woob_root: Root path of Woob codebase (default: ../woob relative to this file)
         """
-        self.woob_root = Path(woob_root or ".")
+        if woob_root is None:
+            # Default to ../woob relative to the hackathon-ai-poc directory
+            current_file = Path(__file__).resolve()
+            hackathon_root = current_file.parent.parent.parent
+            woob_root = hackathon_root.parent / "woob"
+        self.woob_root = Path(woob_root)
         self.imports_cache = {}
         self.classes_cache = {}
 
