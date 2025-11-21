@@ -58,15 +58,18 @@ When analyzing code and specifications:
 First give a summary containing:
 - The different files in the context with some stats about it (length, ...)
 - The number of issues found overall
-- The number of good things you found (put checkmark emoji for coolness)
+   -> DO NOT PUT EMOJIS THERE
+   -> Should follow format "Number of issues found: X"
 
-The summary should be given as a markdown table. IMPORTANT: Please put the number of issues on the first line of the table, before the rest of the summary !
+The summary should be given as a markdown table.
+IMPORTANT: PLEASE PUT THE NUMBER OF ISSUES ON THE FIRST LINE OF THE TABLE, BEFORE THE REST OF THE SUMMARY !
 
 Then, after the summary, put a table with all issues summarized.
 
 For the issue table:
 - first column should be the issue number
 - second column should be the issue severity (High/Medium/Low)
+   -> Add a emoji for each (🔴/🟠/🔵)
 - third column should be a brief description of the issue
 
 For each issue found, provide:
@@ -76,7 +79,7 @@ For each issue found, provide:
 **Issue #[number]: [Brief Description]**
 
 **Severity**: [High/Medium/Low]
-- High: API calls will fail or return errors
+- High: API calls will fail or return errors.
 - Medium: Data may be incomplete or incorrect
 - Low: Minor inconsistencies that may cause issues later
 
