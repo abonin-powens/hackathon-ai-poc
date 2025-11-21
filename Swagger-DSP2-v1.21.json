@@ -1,0 +1,4061 @@
+{
+    "components": {
+        "schemas": {
+            "SupplementaryData": {
+                "type": "object",
+                "required": [
+                    "successfulReportUrl"
+                ],
+                "properties": {
+                    "appliedAuthenticationApproach": {
+                        "type": "string",
+                        "enum": [
+                            "REDIRECT",
+                            "DECOUPLED",
+                            "EMBEDDED"
+                        ]
+                    },
+                    "unsuccessfulReportUrl": {
+                        "type": "string"
+                    },
+                    "successfulReportUrl": {
+                        "minLength": 0,
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "acceptedAuthenticationApproach": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "REDIRECT",
+                                "DECOUPLED",
+                                "EMBEDDED"
+                            ]
+                        }
+                    },
+                    "scaHint": {
+                        "type": "string",
+                        "enum": [
+                            "noScaExemption",
+                            "scaExemption"
+                        ]
+                    }
+                }
+            },
+            "TransactionsLinks": {
+                "type": "object",
+                "required": [
+                    "self"
+                ],
+                "properties": {
+                    "next": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "balances": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "last": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "prev": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "self": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "first": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "parent-list": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    }
+                }
+            },
+            "BeneficiariesLinks": {
+                "type": "object",
+                "required": [
+                    "self"
+                ],
+                "properties": {
+                    "next": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "last": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "prev": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "self": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "first": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "parent-list": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    }
+                }
+            },
+            "PaymentCoverageRequestResource": {
+                "description": "Demande de couverture de paiement.",
+                "type": "object",
+                "required": [
+                    "instructedAmount",
+                    "payee",
+                    "paymentCoverageRequestId"
+                ],
+                "properties": {
+                    "payee": {
+                        "type": "string"
+                    },
+                    "accountId": {
+                        "$ref": "#/components/schemas/AccountIdentification"
+                    },
+                    "paymentCoverageRequestId": {
+                        "type": "string"
+                    },
+                    "instructedAmount": {
+                        "$ref": "#/components/schemas/AmountType"
+                    }
+                }
+            },
+            "HalAccounts": {
+                "type": "object",
+                "required": [
+                    "_links"
+                ],
+                "properties": {
+                    "_links": {
+                        "$ref": "#/components/schemas/PsuContextLinks"
+                    },
+                    "accounts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AccountResource"
+                        }
+                    }
+                }
+            },
+            "Access": {
+                "description": "Liste des consentements accordés à l'AISP par le PSU.",
+                "type": "object",
+                "properties": {
+                    "balances": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AccountIdentification"
+                        },
+                        "properties": {
+                            "last": {
+                                "$ref": "#/components/schemas/AccountIdentification"
+                            },
+                            "first": {
+                                "$ref": "#/components/schemas/AccountIdentification"
+                            },
+                            "empty": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "psuIdentity": {
+                        "type": "boolean"
+                    },
+                    "trustedBeneficiaries": {
+                        "type": "boolean"
+                    },
+                    "transactions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AccountIdentification"
+                        },
+                        "properties": {
+                            "last": {
+                                "$ref": "#/components/schemas/AccountIdentification"
+                            },
+                            "first": {
+                                "$ref": "#/components/schemas/AccountIdentification"
+                            },
+                            "empty": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            },
+            "BalanceResource": {
+                "type": "object",
+                "properties": {
+                    "balanceType": {
+                        "type": "string",
+                        "enum": [
+                            "CLBD",
+                            "XPCD",
+                            "VALU",
+                            "OTHR"
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "lastChangeDateTime": {
+                        "type": "string"
+                    },
+                    "lastCommittedTransaction": {
+                        "type": "string"
+                    },
+                    "balanceAmount": {
+                        "$ref": "#/components/schemas/AmountType"
+                    },
+                    "referenceDate": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AccountIdentification": {
+                "type": "object",
+                "properties": {
+                    "area": {
+                        "$ref": "#/components/schemas/Area"
+                    },
+                    "other": {
+                        "$ref": "#/components/schemas/GenericIdentification"
+                    },
+                    "iban": {
+                        "type": "string"
+                    },
+                    "currency": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PaymentRequestResource": {
+                "type": "object",
+                "required": [
+                    "creationDateTime",
+                    "creditTransferTransaction",
+                    "initiatingParty",
+                    "numberOfTransactions",
+                    "paymentInformationId",
+                    "paymentTypeInformation",
+                    "supplementaryData"
+                ],
+                "properties": {
+                    "debtorAccount": {
+                        "$ref": "#/components/schemas/AccountIdentification"
+                    },
+                    "chargeBearer": {
+                        "type": "string",
+                        "enum": [
+                            "SLEV",
+                            "DEBT",
+                            "CRED",
+                            "SHAR"
+                        ]
+                    },
+                    "resourceId": {
+                        "type": "string"
+                    },
+                    "booking": {
+                        "type": "boolean"
+                    },
+                    "paymentInformationId": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "debtorAgent": {
+                        "$ref": "#/components/schemas/FinancialInstitutionIdentification"
+                    },
+                    "purpose": {
+                        "type": "string",
+                        "enum": [
+                            "ACCT",
+                            "COMC",
+                            "CASH",
+                            "CPKC",
+                            "TRPT"
+                        ]
+                    },
+                    "ultimateCreditor": {
+                        "$ref": "#/components/schemas/PartyIdentification"
+                    },
+                    "statusReasonInformation": {
+                        "type": "string",
+                        "enum": [
+                            "AC01",
+                            "AC04",
+                            "AC06",
+                            "AG01",
+                            "AM18",
+                            "CH03",
+                            "CUST",
+                            "DS02",
+                            "FF01",
+                            "FRAD",
+                            "MS03",
+                            "NOAS",
+                            "RR01",
+                            "RR03",
+                            "RR04",
+                            "RR12"
+                        ]
+                    },
+                    "numberOfTransactions": {
+                        "format": "int32",
+                        "maximum": 80,
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "paymentTypeInformation": {
+                        "$ref": "#/components/schemas/PaymentTypeInformation"
+                    },
+                    "supplementaryData": {
+                        "$ref": "#/components/schemas/SupplementaryData"
+                    },
+                    "requestedExecutionDate": {
+                        "type": "string"
+                    },
+                    "fundsAvailability": {
+                        "type": "boolean"
+                    },
+                    "debtor": {
+                        "$ref": "#/components/schemas/PartyIdentification"
+                    },
+                    "beneficiary": {
+                        "$ref": "#/components/schemas/Beneficiary"
+                    },
+                    "creditTransferTransaction": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CreditTransferTransaction"
+                        }
+                    },
+                    "paymentInformationStatus": {
+                        "type": "string",
+                        "enum": [
+                            "ACCP",
+                            "ACSC",
+                            "ACSP",
+                            "ACTC",
+                            "ACWC",
+                            "ACWP",
+                            "PART",
+                            "RCVD",
+                            "PDNG",
+                            "RJCT"
+                        ]
+                    },
+                    "equivalentAmount": {
+                        "type": "string"
+                    },
+                    "initiatingParty": {
+                        "$ref": "#/components/schemas/PartyIdentification"
+                    },
+                    "creationDateTime": {
+                        "minLength": 1,
+                        "type": "string"
+                    }
+                }
+            },
+            "HalEndUserIdentity": {
+                "type": "object",
+                "required": [
+                    "_links",
+                    "connectedPsu"
+                ],
+                "properties": {
+                    "_links": {
+                        "$ref": "#/components/schemas/EndUserIdentityLinks"
+                    },
+                    "connectedPsu": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PaymentTransferRequestLinks": {
+                "type": "object",
+                "properties": {
+                    "self": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "confirmation": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    }
+                }
+            },
+            "HalBalances": {
+                "type": "object",
+                "required": [
+                    "_links",
+                    "balances"
+                ],
+                "properties": {
+                    "balances": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BalanceResource"
+                        }
+                    },
+                    "_links": {
+                        "$ref": "#/components/schemas/BalancesLink"
+                    }
+                }
+            },
+            "PaymentIdentification": {
+                "type": "object",
+                "required": [
+                    "endToEndId",
+                    "instructionId"
+                ],
+                "properties": {
+                    "resourceId": {
+                        "type": "string"
+                    },
+                    "instructionId": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "endToEndId": {
+                        "minLength": 1,
+                        "type": "string"
+                    }
+                }
+            },
+            "HalPaymentRequestCreation": {
+                "type": "object",
+                "properties": {
+                    "appliedAuthenticationApproach": {
+                        "type": "string",
+                        "enum": [
+                            "REDIRECT",
+                            "DECOUPLED",
+                            "EMBEDDED"
+                        ]
+                    },
+                    "_links": {
+                        "$ref": "#/components/schemas/PaymentRequestResourceCreationLinks"
+                    }
+                }
+            },
+            "PaymentRequestResourceCreationLinks": {
+                "type": "object",
+                "properties": {
+                    "consentApproval": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    }
+                }
+            },
+            "GenericLink": {
+                "type": "object",
+                "properties": {
+                    "templated": {
+                        "type": "boolean"
+                    },
+                    "href": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HalTransactions": {
+                "type": "object",
+                "required": [
+                    "_links"
+                ],
+                "properties": {
+                    "_links": {
+                        "$ref": "#/components/schemas/TransactionsLinks"
+                    },
+                    "transactions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Transaction"
+                        }
+                    }
+                }
+            },
+            "AccountLinks": {
+                "type": "object",
+                "properties": {
+                    "balances": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "transactions": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    }
+                }
+            },
+            "GenericIdentification": {
+                "type": "object",
+                "properties": {
+                    "identification": {
+                        "type": "string"
+                    },
+                    "schemeName": {
+                        "type": "string"
+                    },
+                    "cardNumber": {
+                        "type": "string"
+                    },
+                    "issuer": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PaymentTypeInformation": {
+                "type": "object",
+                "properties": {
+                    "categoryPurpose": {
+                        "type": "string",
+                        "enum": [
+                            "DVPM",
+                            "CASH",
+                            "CORT",
+                            "INTC",
+                            "TREA"
+                        ]
+                    },
+                    "localInstrument": {
+                        "type": "string"
+                    },
+                    "instructionPriority": {
+                        "type": "string",
+                        "enum": [
+                            "HIGH",
+                            "NORM"
+                        ]
+                    },
+                    "serviceLevel": {
+                        "type": "string",
+                        "enum": [
+                            "SEPA"
+                        ]
+                    }
+                }
+            },
+            "HalPaymentRequest": {
+                "type": "object",
+                "required": [
+                    "_links",
+                    "paymentRequest"
+                ],
+                "properties": {
+                    "_links": {
+                        "$ref": "#/components/schemas/PaymentTransferRequestLinks"
+                    },
+                    "paymentRequest": {
+                        "$ref": "#/components/schemas/PaymentRequestResource"
+                    }
+                }
+            },
+            "HalBeneficiaries": {
+                "type": "object",
+                "required": [
+                    "_links",
+                    "beneficiaries"
+                ],
+                "properties": {
+                    "_links": {
+                        "$ref": "#/components/schemas/BeneficiariesLinks"
+                    },
+                    "beneficiaries": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Beneficiary"
+                        }
+                    }
+                }
+            },
+            "BalancesLink": {
+                "type": "object",
+                "required": [
+                    "self"
+                ],
+                "properties": {
+                    "self": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "transactions": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "parent-list": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    }
+                }
+            },
+            "PartyIdentification": {
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "postalAddress": {
+                        "$ref": "#/components/schemas/PostalAddress"
+                    },
+                    "organisationId": {
+                        "$ref": "#/components/schemas/GenericIdentification"
+                    },
+                    "privateId": {
+                        "$ref": "#/components/schemas/GenericIdentification"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PostalAddress": {
+                "type": "object",
+                "required": [
+                    "addressLine",
+                    "country"
+                ],
+                "properties": {
+                    "country": {
+                        "type": "string"
+                    },
+                    "addressLine": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Area": {
+                "type": "object",
+                "properties": {
+                    "areaId": {
+                        "type": "string"
+                    },
+                    "areaLabel": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AccountResource": {
+                "type": "object",
+                "properties": {
+                    "cashAccountType": {
+                        "type": "string",
+                        "enum": [
+                            "CACC",
+                            "CARD"
+                        ]
+                    },
+                    "accountId": {
+                        "$ref": "#/components/schemas/AccountIdentification"
+                    },
+                    "resourceId": {
+                        "type": "string"
+                    },
+                    "product": {
+                        "type": "string"
+                    },
+                    "balances": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BalanceResource"
+                        }
+                    },
+                    "_links": {
+                        "$ref": "#/components/schemas/AccountLinks"
+                    },
+                    "usage": {
+                        "type": "string",
+                        "enum": [
+                            "PRIV",
+                            "ORGA"
+                        ]
+                    },
+                    "psuStatus": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "linkedAccount": {
+                        "type": "string"
+                    },
+                    "bicFi": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Transaction": {
+                "type": "object",
+                "required": [
+                    "bookingDate",
+                    "creditDebitIndicator",
+                    "remittanceInformation",
+                    "status",
+                    "transactionAmount"
+                ],
+                "properties": {
+                    "resourceId": {
+                        "type": "string"
+                    },
+                    "remittanceInformation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "transactionAmount": {
+                        "$ref": "#/components/schemas/AmountType"
+                    },
+                    "bookingDate": {
+                        "type": "string"
+                    },
+                    "valueDate": {
+                        "type": "string"
+                    },
+                    "transactionDate": {
+                        "type": "string"
+                    },
+                    "creditDebitIndicator": {
+                        "type": "string",
+                        "enum": [
+                            "CRDT",
+                            "DBIT"
+                        ]
+                    },
+                    "entryReference": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "BOOK",
+                            "PDNG",
+                            "OTHR"
+                        ]
+                    }
+                }
+            },
+            "FinancialInstitutionIdentification": {
+                "type": "object",
+                "required": [
+                    "bicFi"
+                ],
+                "properties": {
+                    "postalAddress": {
+                        "$ref": "#/components/schemas/PostalAddress"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "bicFi": {
+                        "type": "string"
+                    },
+                    "clearingSystemMemberId": {
+                        "$ref": "#/components/schemas/ClearingSystemMemberIdentification"
+                    }
+                }
+            },
+            "AmountType": {
+                "type": "object",
+                "required": [
+                    "amount",
+                    "currency"
+                ],
+                "properties": {
+                    "amount": {
+                        "type": "string"
+                    },
+                    "currency": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ErrorModel": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string"
+                    },
+                    "error": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                }
+            },
+            "EndUserIdentityLinks": {
+                "type": "object",
+                "required": [
+                    "self"
+                ],
+                "properties": {
+                    "self": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "parent-list": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    }
+                }
+            },
+            "PsuContextLinks": {
+                "type": "object",
+                "properties": {
+                    "next": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "last": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "prev": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "self": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "beneficiaries": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "endUserIdentity": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    },
+                    "first": {
+                        "$ref": "#/components/schemas/GenericLink"
+                    }
+                }
+            },
+            "Beneficiary": {
+                "type": "object",
+                "required": [
+                    "creditor"
+                ],
+                "properties": {
+                    "trusted": {
+                        "writeOnly": true,
+                        "type": "boolean"
+                    },
+                    "creditorAgent": {
+                        "$ref": "#/components/schemas/FinancialInstitutionIdentification"
+                    },
+                    "creditorAccount": {
+                        "$ref": "#/components/schemas/AccountIdentification"
+                    },
+                    "creditor": {
+                        "$ref": "#/components/schemas/PartyIdentification"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "isTrusted": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ClearingSystemMemberIdentification": {
+                "type": "object",
+                "properties": {
+                    "clearingSystemId": {
+                        "type": "string"
+                    },
+                    "memberId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CreditTransferTransaction": {
+                "type": "object",
+                "required": [
+                    "instructedAmount",
+                    "paymentId",
+                    "remittanceInformation",
+                    "requestedExecutionDate"
+                ],
+                "properties": {
+                    "executionRule": {
+                        "type": "string",
+                        "enum": [
+                            "FWNG",
+                            "PREC"
+                        ]
+                    },
+                    "requestedExecutionDate": {
+                        "type": "string"
+                    },
+                    "beneficiary": {
+                        "$ref": "#/components/schemas/Beneficiary"
+                    },
+                    "endDate": {
+                        "type": "string"
+                    },
+                    "remittanceInformation": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "transactionStatus": {
+                        "type": "string",
+                        "enum": [
+                            "RJCT",
+                            "PDNG",
+                            "ACSP",
+                            "ACSC"
+                        ]
+                    },
+                    "paymentId": {
+                        "$ref": "#/components/schemas/PaymentIdentification"
+                    },
+                    "ultimateCreditor": {
+                        "$ref": "#/components/schemas/PartyIdentification"
+                    },
+                    "statusReasonInformation": {
+                        "type": "string",
+                        "enum": [
+                            "AC01",
+                            "AC04",
+                            "AC06",
+                            "AG01",
+                            "AM18",
+                            "CH03",
+                            "CUST",
+                            "DS02",
+                            "FF01",
+                            "FRAD",
+                            "MS03",
+                            "NOAS",
+                            "RR01",
+                            "RR03",
+                            "RR04",
+                            "RR12"
+                        ]
+                    },
+                    "instructedAmount": {
+                        "$ref": "#/components/schemas/AmountType"
+                    },
+                    "frequency": {
+                        "type": "string",
+                        "enum": [
+                            "WEEK",
+                            "TOWK",
+                            "MNTH",
+                            "TOMN",
+                            "QUTR",
+                            "SEMI",
+                            "YEAR"
+                        ]
+                    },
+                    "regulatoryReportingCodes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "requestBodies": {},
+        "responses": {},
+        "securitySchemes": {},
+        "parameters": {}
+    },
+    "servers": [
+        {
+            "url": "/dsp2"
+        }
+    ],
+    "openapi": "3.0.1",
+    "paths": {
+        "/payment-requests": {
+            "post": {
+                "summary": "Initiates of a Payment Request on a PSU account on behalf of a merchant",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PaymentRequestResource"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "description": "Initiates of a Payment Request on a PSU account on behalf of a merchant",
+                "operationId": "postPaymentRequests",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalPaymentRequestCreation"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid status value",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, authentication failure.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, authentication successful but access to resource is not allowed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many requests.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service unavailable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Authorization",
+                        "description": "Access token to be passed as a header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Address",
+                        "description": "IP address used by the PSU's terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Port",
+                        "description": "IP port used by the PSU's terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-HTTP-Method",
+                        "description": "Http method for the most relevant PSU's terminal request to the TTP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Date",
+                        "description": "Timestamp of the most relevant PSU's terminal request to the TTP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-GEO-Location",
+                        "description": "Geographical location of the PSU as provided by the PSU mobile terminal if any to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-User-Agent",
+                        "description": "\"User-Agent\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Referer",
+                        "description": "\"Referer\" header field sent by the PSU terminal when connecting to the TPP.Notice that an initial typo in RFC 1945 specifies that “referer” (incorrect spelling) is to be used. The correct spelling “referrer” can be used but might not be understood.",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept",
+                        "description": "\"Accept\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Charset",
+                        "description": "\"Accept-Charset\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Encoding",
+                        "description": "\"Accept-Encoding\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Language",
+                        "description": "\"Accept-Language\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Device-ID",
+                        "description": "UUID (Universally Unique Identifier) for a device, which is used by the PSU, if available",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Digest",
+                        "description": "Digest of the body",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "x-forwarded-host",
+                        "description": "The x-forwarded-host header is used to indicate the original host requested by the client, as seen by a proxy or load balance",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Signature",
+                        "description": "http-signature of the request (cf. https://datatracker.ietf.org/doc/draft-cavage-http-signatures/)The keyId part of the header should be formatted as follows keiId=\"SN=XXX,CA=YYYYYYYYYYYYYYYY\" where \"XXX\" is the serial number, in hexadecimal without any prefix (like 0x), of the QSEAL certificate whose relevant private key was used for signing \"YYYYYYYYYYYYYYYY\" is the the Issuer DN, full Distinguished Name of the Certification Authority having issued this certificateHTTP400 will be returned by the server in case of invalid or absent signature",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "X-Request-ID",
+                        "description": "Correlation header to be set in a request and retrieved in the relevant response",
+                        "style": "simple",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "PaymentRequests"
+                ],
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited"
+            }
+        },
+        "/accounts/{accountResourceId}/transactions": {
+            "get": {
+                "summary": "Returns transactions for an account",
+                "description": "Returns transactions for an account for a given PSU account that is specified by the AISP through an account resource identification. The request may use some filter parameter in order to restrict the query on a given imputation date range or past a given incremental technical identification. The result may be subject to pagination.",
+                "operationId": "getAccountsTransactions",
+                "responses": {
+                    "200": {
+                        "description": "Complete transactions response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalTransactions"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalTransactions"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid status value",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many requests.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service unavailable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "path",
+                        "explode": false,
+                        "name": "accountResourceId",
+                        "description": "ID du compte à récupérer",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "explode": true,
+                        "name": "dateTo",
+                        "description": "Inclusive minimal imputation date of the transactions.",
+                        "style": "form",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "explode": true,
+                        "name": "dateFrom",
+                        "description": "Exclusive maximal imputation date of the transactions.",
+                        "style": "form",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "explode": true,
+                        "name": "afterEntryReference",
+                        "description": "Specifies the value on which the result has to be computed.",
+                        "style": "form",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Authorization",
+                        "description": "Access token to be passed as a header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Address",
+                        "description": "IP address du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Port",
+                        "description": "IP port du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-HTTP-Method",
+                        "description": "Méthode HTTP du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Date",
+                        "description": "Date de la requête PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-GEO-Location",
+                        "description": "Géolocalisation PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-User-Agent",
+                        "description": "User-Agent PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Referer",
+                        "description": "Referer PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept",
+                        "description": "Accept PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Charset",
+                        "description": "Accept-Charset PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Encoding",
+                        "description": "Accept-Encoding PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Language",
+                        "description": "Accept-Language PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Device-ID",
+                        "description": "Device ID PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Digest",
+                        "description": "Digest du body",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Signature",
+                        "description": "Signature de la requête",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "X-Request-ID",
+                        "description": "Correlation header",
+                        "style": "simple",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Accounts_DSP2"
+                ],
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited"
+            }
+        },
+        "/trusted-beneficiaries": {
+            "get": {
+                "summary": "Récupère la liste des bénéficiaires de confiance (AISP)",
+                "description": "Récupère la liste des bénéficiaires de confiance pour le PSU.",
+                "operationId": "getTrustedBeneficiaries",
+                "responses": {
+                    "200": {
+                        "description": "Liste des bénéficiaires de confiance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalBeneficiaries"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalBeneficiaries"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Authorization",
+                        "description": "Access token à passer en header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Address",
+                        "description": "IP address du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Port",
+                        "description": "IP port du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-HTTP-Method",
+                        "description": "Méthode HTTP du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Date",
+                        "description": "Date de la requête PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-GEO-Location",
+                        "description": "Géolocalisation PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-User-Agent",
+                        "description": "User-Agent PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Referer",
+                        "description": "Referer PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept",
+                        "description": "Accept PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Charset",
+                        "description": "Accept-Charset PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Encoding",
+                        "description": "Accept-Encoding PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Language",
+                        "description": "Accept-Language PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Device-ID",
+                        "description": "Device ID PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Digest",
+                        "description": "Digest du body",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Signature",
+                        "description": "Signature de la requête",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "X-Request-ID",
+                        "description": "Correlation header",
+                        "style": "simple",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "TrustedBeneficiaries"
+                ],
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited"
+            }
+        },
+        "/end-user-identity": {
+            "get": {
+                "summary": "Retrieval of the identity of the end-user (AISP)",
+                "description": "Retrieval of the identity of the end-user (AISP)",
+                "operationId": "endUserIdentityGet",
+                "responses": {
+                    "200": {
+                        "description": "The ASPSP returns the identity of the PSU",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalEndUserIdentity"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalEndUserIdentity"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, authentication failure.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, authentication successful but access to resource is not allowed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found, no request available.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many requests.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Authorization",
+                        "description": "Access token to be passed as a header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Address",
+                        "description": "IP address used by the PSU’s terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Port",
+                        "description": "IP port used by the PSU’s terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-HTTP-Method",
+                        "description": "Http method for the most relevant PSU’s terminal request to the TTP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Date",
+                        "description": "Timestamp of the most relevant PSU’s terminal request to the TTP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-GEO-Location",
+                        "description": "Geographical location of the PSU as provided by the PSU mobile terminal if any to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-User-Agent",
+                        "description": "User-Agent header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Referer",
+                        "description": "Referer header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept",
+                        "description": "Accept header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Charset",
+                        "description": "Accept-Charset header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Encoding",
+                        "description": "Accept-Encoding header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Language",
+                        "description": "Accept-Language header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Device-ID",
+                        "description": "UUID for a device, which is used by the PSU, if available",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Digest",
+                        "description": "Digest of the body",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Signature",
+                        "description": "http-signature of the request",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "X-Request-ID",
+                        "description": "Correlation header to be set in a request and retrieved in the relevant response",
+                        "style": "simple",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "EndUserIdentity"
+                ],
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited"
+            }
+        },
+        "/accounts/{accountResourceId}/balances": {
+            "get": {
+                "summary": "Récupère les balances d'un compte",
+                "description": "Retourne les balances pour un compte donné.",
+                "operationId": "getAccountsBalances",
+                "responses": {
+                    "200": {
+                        "description": "Balances du compte",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalBalances"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalBalances"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "path",
+                        "explode": false,
+                        "name": "accountResourceId",
+                        "description": "ID du compte à récupérer",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Authorization",
+                        "description": "Access token à passer en header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Address",
+                        "description": "IP address du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Port",
+                        "description": "IP port du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-HTTP-Method",
+                        "description": "Méthode HTTP du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Date",
+                        "description": "Date de la requête PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-GEO-Location",
+                        "description": "Géolocalisation PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-User-Agent",
+                        "description": "User-Agent PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Referer",
+                        "description": "Referer PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept",
+                        "description": "Accept PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Charset",
+                        "description": "Accept-Charset PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Encoding",
+                        "description": "Accept-Encoding PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Language",
+                        "description": "Accept-Language PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Digest",
+                        "description": "Digest du body",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Signature",
+                        "description": "Signature de la requête",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "X-Request-ID",
+                        "description": "Correlation header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Device-ID",
+                        "description": "Device ID PSU",
+                        "style": "simple",
+                        "required": false
+                    }
+                ],
+                "tags": [
+                    "Accounts_DSP2"
+                ],
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited"
+            }
+        },
+        "/consents": {
+            "put": {
+                "summary": "Forwarding the PSU consent (AISP)",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Access"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "description": "Le PSU spécifie à l'AISP quels comptes et fonctionnalités sont accessibles. L'AISP transmet ces paramètres à l'ASPSP.",
+                "operationId": "consents",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid status value",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "416": {
+                        "description": "Too many requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service unavailable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Authorization",
+                        "description": "Access token à passer en header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Address",
+                        "description": "IP address du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Port",
+                        "description": "IP port du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-HTTP-Method",
+                        "description": "Méthode HTTP du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Date",
+                        "description": "Date de la requête PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-GEO-Location",
+                        "description": "Géolocalisation PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-User-Agent",
+                        "description": "User-Agent PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Referer",
+                        "description": "Referer PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept",
+                        "description": "Accept PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Charset",
+                        "description": "Accept-Charset PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Encoding",
+                        "description": "Accept-Encoding PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Language",
+                        "description": "Accept-Language PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Device-ID",
+                        "description": "Device ID PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Digest",
+                        "description": "Digest du body",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Signature",
+                        "description": "Signature de la requête",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "X-Request-ID",
+                        "description": "Correlation header",
+                        "style": "simple",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Consents"
+                ],
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited"
+            }
+        },
+        "/payment-requests/{paymentRequestResourceId}/confirmation": {
+            "post": {
+                "summary": "Retrieves a Payment Request previously posted on a PSU account on behalf of a merchant",
+                "description": "Retrieves a Payment Request previously posted on a PSU account on behalf of a merchant",
+                "operationId": "postPaymentRequestsConfirmation",
+                "responses": {
+                    "200": {
+                        "description": "Retrieval of the previously posted Payment Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalPaymentRequest"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid status value",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, authentication failure.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, authentication successful but access to resource is not allowed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found, no request available.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many requests.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service unavailable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Authorization",
+                        "description": "Access token to be passed as a header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Address",
+                        "description": "IP address used by the PSU's terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Port",
+                        "description": "IP port used by the PSU's terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-HTTP-Method",
+                        "description": "Http method for the most relevant PSU's terminal request to the TTP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Date",
+                        "description": "Timestamp of the most relevant PSU's terminal request to the TTP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-GEO-Location",
+                        "description": "Geographical location of the PSU as provided by the PSU mobile terminal if any to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-User-Agent",
+                        "description": "\"User-Agent\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Referer",
+                        "description": "\"Referer\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept",
+                        "description": "\"Accept\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Charset",
+                        "description": "\"Accept-Charset\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Encoding",
+                        "description": "\"Accept-Encoding\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Language",
+                        "description": "\"Accept-Language\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Device-ID",
+                        "description": "UUID (Universally Unique Identifier) for a device, which is used by the PSU, if available",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "x-forwarded-host",
+                        "description": "The x-forwarded-host header is used to indicate the original host requested by the client, as seen by a proxy or load balance",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Digest",
+                        "description": "Digest of the body",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Signature",
+                        "description": "http-signature of the request",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "X-Request-ID",
+                        "description": "Correlation header to be set in a request and retrieved in the relevant response",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "path",
+                        "explode": false,
+                        "name": "paymentRequestResourceId",
+                        "description": "ID of the payment information within the Payment activation Request",
+                        "style": "simple",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "PaymentRequests"
+                ],
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited"
+            }
+        },
+        "/accounts": {
+            "get": {
+                "summary": "Liste les comptes accessibles au TPP",
+                "description": "Retourne tous les comptes que le PSU a rendu accessibles au TPP.",
+                "operationId": "getAccounts",
+                "responses": {
+                    "200": {
+                        "description": "Liste des comptes disponible",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalAccounts"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalAccounts"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "416": {
+                        "description": "Too many requests.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service unavailable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Authorization",
+                        "description": "Access token à passer en header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Address",
+                        "description": "IP address du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Port",
+                        "description": "IP port du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-HTTP-Method",
+                        "description": "Méthode HTTP du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Date",
+                        "description": "Date de la requête PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-GEO-Location",
+                        "description": "Géolocalisation PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-User-Agent",
+                        "description": "User-Agent PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Referer",
+                        "description": "Referer PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept",
+                        "description": "Accept PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Charset",
+                        "description": "Accept-Charset PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Encoding",
+                        "description": "Accept-Encoding PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Language",
+                        "description": "Accept-Language PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Device-ID",
+                        "description": "Device ID PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Digest",
+                        "description": "Digest du body",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Signature",
+                        "description": "Signature de la requête",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "X-Request-ID",
+                        "description": "Correlation header",
+                        "style": "simple",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Accounts_DSP2"
+                ],
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited"
+            }
+        },
+        "/payment-requests/{paymentRequestResourceId}": {
+            "get": {
+                "summary": "Retrieves a Payment Request previously posted on a PSU account on behalf of a merchant",
+                "description": "Retrieves a Payment Request previously posted on a PSU account on behalf of a merchant",
+                "operationId": "getPaymentRequests",
+                "responses": {
+                    "200": {
+                        "description": "Retrieval of the previously posted Payment Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HalPaymentRequest"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid status value",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, authentication failure.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, authentication successful but access to resource is not allowed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found, no request available.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many requests.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service unavailable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Authorization",
+                        "description": "Access token to be passed as a header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Address",
+                        "description": "IP address used by the PSU's terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Port",
+                        "description": "IP port used by the PSU's terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-HTTP-Method",
+                        "description": "Http method for the most relevant PSU's terminal request to the TTP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Date",
+                        "description": "Timestamp of the most relevant PSU's terminal request to the TTP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-GEO-Location",
+                        "description": "Geographical location of the PSU as provided by the PSU mobile terminal if any to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-User-Agent",
+                        "description": "\"User-Agent\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Referer",
+                        "description": "\"Referer\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept",
+                        "description": "\"Accept\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Charset",
+                        "description": "\"Accept-Charset\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Encoding",
+                        "description": "\"Accept-Encoding\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Language",
+                        "description": "\"Accept-Language\" header field sent by the PSU terminal when connecting to the TPP",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Device-ID",
+                        "description": "UUID (Universally Unique Identifier) for a device, which is used by the PSU, if available",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "x-forwarded-host",
+                        "description": "The x-forwarded-host header is used to indicate the original host requested by the client, as seen by a proxy or load balance",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Digest",
+                        "description": "Digest of the body",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Signature",
+                        "description": "http-signature of the request",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "X-Request-ID",
+                        "description": "Correlation header to be set in a request and retrieved in the relevant response",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "path",
+                        "explode": false,
+                        "name": "paymentRequestResourceId",
+                        "description": "ID of the payment information within the Payment activation Request",
+                        "style": "simple",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "PaymentRequests"
+                ],
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited"
+            }
+        },
+        "/funds-confirmations": {
+            "post": {
+                "summary": "Vérifie la disponibilité des fonds sur le compte PSU",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PaymentCoverageRequestResource"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "description": "Le PISP demande à l'ASPSP si un montant peut être couvert par la liquidité disponible sur un compte PSU ou une carte de paiement.",
+                "operationId": "postFundsConfirmations",
+                "responses": {
+                    "200": {
+                        "description": "Demande de couverture de paiement acceptée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentCoverageRequestResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid status value",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "416": {
+                        "description": "Too many requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service unavailable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Account-Consent-Responsability",
+                        "description": "Responsabilité du consentement sur le compte PSU (BY-AISP ou BY-ASPSP)",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Authorization",
+                        "description": "Access token à passer en header",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Address",
+                        "description": "IP address du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-IP-Port",
+                        "description": "IP port du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-HTTP-Method",
+                        "description": "Méthode HTTP du terminal PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Date",
+                        "description": "Date de la requête PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-GEO-Location",
+                        "description": "Géolocalisation PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-User-Agent",
+                        "description": "User-Agent PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Referer",
+                        "description": "Referer PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept",
+                        "description": "Accept PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Charset",
+                        "description": "Accept-Charset PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Encoding",
+                        "description": "Accept-Encoding PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Device-ID",
+                        "description": "Device ID PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "PSU-Accept-Language",
+                        "description": "Accept-Language PSU",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Digest",
+                        "description": "Digest du body",
+                        "style": "simple",
+                        "required": false
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "Signature",
+                        "description": "Signature de la requête",
+                        "style": "simple",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "explode": false,
+                        "name": "X-Request-ID",
+                        "description": "Correlation header",
+                        "style": "simple",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "FundsConfirmations"
+                ],
+                "x-auth-type": "Application & Application User",
+                "x-throttling-tier": "Unlimited"
+            }
+        }
+    },
+    "x-wso2-security": {
+        "apim": {
+            "x-wso2-scopes": []
+        }
+    },
+    "info": {
+        "description": "L’API DSP2 a pour objectif de servir et contrôler les demandes provenant des Tiers externes.",
+        "title": "DSP2",
+        "version": "v1"
+    },
+    "tags": [
+        {
+            "name": "PaymentRequests",
+            "description": "Endpoint that allows a TPP to initiate a payment"
+        },
+        {
+            "name": "Accounts_DSP2",
+            "description": "Cette ressource permet de restituer la liste des comptes du PSU autorisés pour un TPP de type AISP."
+        },
+        {
+            "name": "Consents",
+            "description": "Cette ressource permet de recevoir les informations sur les droits accordés aux comptes du PSU pour le TPP"
+        },
+        {
+            "name": "FundsConfirmations",
+            "description": "The PISP can ask an ASPSP to check if a given amount can be covered by the liquidity that is available on a PSU cash account or payment card. The ASPSP answers with a structure embedding the original request and the result as a boolean."
+        },
+        {
+            "name": "TrustedBeneficiaries",
+            "description": "Endpoint permettant de récupérer la liste des bénéficiaires de confiance (AISP)"
+        },
+        {
+            "name": "EndUserIdentity",
+            "description": "Retrieval of the identity of the end-user (AISP)"
+        }
+    ]
+}

@@ -1,0 +1,440 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DSP2 - Accounts & Transactions",
+    "description": "PSD2 API specification filtered for accounts and transactions endpoints",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "/dsp2"
+    }
+  ],
+  "paths": {
+    "/accounts": {
+      "get": {
+        "summary": "Liste les comptes accessibles au TPP",
+        "description": "Retourne tous les comptes que le PSU a rendu accessibles au TPP.",
+        "operationId": "getAccounts",
+        "tags": ["Accounts_DSP2"],
+        "responses": {
+          "200": {
+            "description": "Liste des comptes disponible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HalAccounts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountResourceId}/balances": {
+      "get": {
+        "summary": "Récupère les balances d'un compte",
+        "description": "Retourne les balances pour un compte donné.",
+        "operationId": "getAccountsBalances",
+        "tags": ["Accounts_DSP2"],
+        "parameters": [
+          {
+            "name": "accountResourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du compte à récupérer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Balances du compte",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HalBalances"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountResourceId}/transactions": {
+      "get": {
+        "summary": "Returns transactions for an account",
+        "description": "Returns transactions for an account for a given PSU account that is specified by the AISP through an account resource identification.",
+        "operationId": "getAccountsTransactions",
+        "tags": ["Accounts_DSP2"],
+        "parameters": [
+          {
+            "name": "accountResourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du compte à récupérer"
+          },
+          {
+            "name": "dateFrom",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exclusive maximal imputation date of the transactions."
+          },
+          {
+            "name": "dateTo",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Inclusive minimal imputation date of the transactions."
+          },
+          {
+            "name": "afterEntryReference",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Specifies the value on which the result has to be computed."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Complete transactions response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HalTransactions"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HalAccounts": {
+        "type": "object",
+        "required": ["_links"],
+        "properties": {
+          "_links": {
+            "$ref": "#/components/schemas/PsuContextLinks"
+          },
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountResource"
+            }
+          }
+        }
+      },
+      "AccountResource": {
+        "type": "object",
+        "properties": {
+          "resourceId": {
+            "type": "string"
+          },
+          "accountId": {
+            "$ref": "#/components/schemas/AccountIdentification"
+          },
+          "name": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "cashAccountType": {
+            "type": "string",
+            "enum": ["CACC", "CARD"]
+          },
+          "usage": {
+            "type": "string",
+            "enum": ["PRIV", "ORGA"]
+          },
+          "psuStatus": {
+            "type": "string"
+          },
+          "bicFi": {
+            "type": "string"
+          },
+          "linkedAccount": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "balances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BalanceResource"
+            }
+          },
+          "_links": {
+            "$ref": "#/components/schemas/AccountLinks"
+          }
+        }
+      },
+      "AccountIdentification": {
+        "type": "object",
+        "properties": {
+          "iban": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "other": {
+            "$ref": "#/components/schemas/GenericIdentification"
+          },
+          "area": {
+            "$ref": "#/components/schemas/Area"
+          }
+        }
+      },
+      "HalBalances": {
+        "type": "object",
+        "required": ["_links", "balances"],
+        "properties": {
+          "balances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BalanceResource"
+            }
+          },
+          "_links": {
+            "$ref": "#/components/schemas/BalancesLink"
+          }
+        }
+      },
+      "BalanceResource": {
+        "type": "object",
+        "properties": {
+          "balanceType": {
+            "type": "string",
+            "enum": ["CLBD", "XPCD", "VALU", "OTHR"]
+          },
+          "name": {
+            "type": "string"
+          },
+          "balanceAmount": {
+            "$ref": "#/components/schemas/AmountType"
+          },
+          "referenceDate": {
+            "type": "string"
+          },
+          "lastChangeDateTime": {
+            "type": "string"
+          },
+          "lastCommittedTransaction": {
+            "type": "string"
+          }
+        }
+      },
+      "HalTransactions": {
+        "type": "object",
+        "required": ["_links"],
+        "properties": {
+          "_links": {
+            "$ref": "#/components/schemas/TransactionsLinks"
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            }
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "required": [
+          "bookingDate",
+          "creditDebitIndicator",
+          "remittanceInformation",
+          "status",
+          "transactionAmount"
+        ],
+        "properties": {
+          "resourceId": {
+            "type": "string"
+          },
+          "transactionAmount": {
+            "$ref": "#/components/schemas/AmountType"
+          },
+          "creditDebitIndicator": {
+            "type": "string",
+            "enum": ["CRDT", "DBIT"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["BOOK", "PDNG", "OTHR"]
+          },
+          "bookingDate": {
+            "type": "string"
+          },
+          "valueDate": {
+            "type": "string"
+          },
+          "transactionDate": {
+            "type": "string"
+          },
+          "remittanceInformation": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "entryReference": {
+            "type": "string"
+          }
+        }
+      },
+      "AmountType": {
+        "type": "object",
+        "required": ["amount", "currency"],
+        "properties": {
+          "amount": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "AccountLinks": {
+        "type": "object",
+        "properties": {
+          "balances": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "transactions": {
+            "$ref": "#/components/schemas/GenericLink"
+          }
+        }
+      },
+      "BalancesLink": {
+        "type": "object",
+        "required": ["self"],
+        "properties": {
+          "self": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "transactions": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "parent-list": {
+            "$ref": "#/components/schemas/GenericLink"
+          }
+        }
+      },
+      "TransactionsLinks": {
+        "type": "object",
+        "required": ["self"],
+        "properties": {
+          "self": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "first": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "prev": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "next": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "last": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "balances": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "parent-list": {
+            "$ref": "#/components/schemas/GenericLink"
+          }
+        }
+      },
+      "PsuContextLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "first": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "prev": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "next": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "last": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "beneficiaries": {
+            "$ref": "#/components/schemas/GenericLink"
+          },
+          "endUserIdentity": {
+            "$ref": "#/components/schemas/GenericLink"
+          }
+        }
+      },
+      "GenericLink": {
+        "type": "object",
+        "properties": {
+          "href": {
+            "type": "string"
+          },
+          "templated": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GenericIdentification": {
+        "type": "object",
+        "properties": {
+          "identification": {
+            "type": "string"
+          },
+          "schemeName": {
+            "type": "string"
+          },
+          "issuer": {
+            "type": "string"
+          },
+          "cardNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "Area": {
+        "type": "object",
+        "properties": {
+          "areaId": {
+            "type": "string"
+          },
+          "areaLabel": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Accounts_DSP2",
+      "description": "Cette ressource permet de restituer la liste des comptes du PSU autorisés pour un TPP de type AISP."
+    }
+  ]
+}
