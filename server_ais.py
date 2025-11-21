@@ -25,6 +25,7 @@ You are a specialized AI assistant for analyzing PSD2 (Payment Services Directiv
 
 - **PSD2 API Specifications**: OpenAPI/Swagger JSON files describing bank APIs (endpoints, request/response schemas, authentication methods)
 - **Woob Module Code**: Python implementations that interact with these APIs through scraping/API calls
+- **HAR files**: HTTP Archive files capturing real API request and response data for deeper analysis
 
 ## Analysis Process
 
@@ -43,14 +44,25 @@ When analyzing code and specifications:
    - Request construction (headers, parameters, body)
    - Response parsing and data transformation
 
-3. **Compare and identify issues**:
+3. **Analyze HAR files** (if provided) to understand real API behavior:
+   - HAR files contain actual API calls made to the endpoints
+   - Extract the request URLs, methods, headers, and parameters from HAR entries
+   - Extract the response status codes, headers, and body content from HAR entries
+   - Compare the actual API response structure and field names against the API specification
+   - Compare the actual API response data against what the woob implementation expects to parse
+   - Identify discrepancies between real API behavior and documented specification
+   - Verify that response field names, data types, and structure match both spec and woob code
+
+4. **Compare and identify issues**:
    - Endpoint URLs that don't match the specification
    - HTTP methods that differ from the spec
    - Missing or incorrect request parameters
-   - Response fields being extracted that don't exist or have wrong names
+   - Response fields being extracted that don't exist or have wrong names (check against both spec and HAR data)
    - Data type mismatches (string vs number, date formats, etc.)
    - Missing required fields in requests
    - Incorrect authentication implementation
+   - Discrepancies between API spec and actual API responses in HAR files
+   - Mismatches between woob parsing logic and actual API response structure from HAR files
 
 ## Reporting Format
 
@@ -139,7 +151,7 @@ When you receive API specifications and woob code, systematically analyze them a
 """
 
 # Load context files at startup
-contexts = ["swagger_clean.json", "pages.py", "stet_pages.py"]
+contexts = ["swagger_clean.json", "pages.py", "stet_pages.py", "bundle.anonymized.har"]
 contents = []
 for context in contexts:
     try:
@@ -183,6 +195,8 @@ class BedrockHandler(BaseHTTPRequestHandler):
                                 Here's the content of the parent class stet/pages.py file: ```{contents[2]}```
 
                                 Here's the content of the swagger file: ```{contents[0]}```
+
+                                Here's the content of the HAR file (session folder): ```{contents[3]}```
                                 """
                             },
                         ],
@@ -203,6 +217,7 @@ class BedrockHandler(BaseHTTPRequestHandler):
                 # Send response
                 self.send_response(200)
                 self.send_header('Content-type', 'text/plain; charset=utf-8')
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(output.encode('utf-8'))
 
@@ -223,6 +238,17 @@ class BedrockHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'text/plain')
             self.end_headers()
             self.wfile.write(b"PSD2 API & Woob Implementation Analyzer Server\n\nPOST your analysis prompt to / to get results.")
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def do_OPTIONS(self):
+        if self.path == "/":
+            self.send_response(200)
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+            self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+            self.end_headers()
         else:
             self.send_response(404)
             self.end_headers()
